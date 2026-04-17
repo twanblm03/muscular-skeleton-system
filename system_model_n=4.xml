@@ -1,0 +1,653 @@
+<!--
+cd ~/mujoco-3.3.5/bin
+./simulate ~/Musculoskeletal-System-main/muscular-skeleton-system/system_model_n=4.xml
+-->
+
+<mujoco model="example4">
+<!--    <include file="scene.xml"/>-->
+<!--    使用trained twice的muscle   -->
+    <compiler angle="degree" coordinate="local"/>
+    <option timestep="0.002"/>
+    <default>
+        <site size="0.005" rgba="1 0 0 1"/>
+        <!-- switched-state version: tendon force law is handled in Python; XML keeps geometry/range only -->
+        <!-- 气动肌肉的物理参数：
+             无负载原长：144.9；收缩：86.5 (+40固定长度) springlength="0.185"
+             收缩比：0.597
+             加220g负载后：241.9；收缩：185.9 （最大不变形负载）
+             平均刚度：11.5
+             -->
+        <!-- biceps tendon -->
+        <default class="tendon_A">
+            <tendon range="0.05 1"  limited="true"
+                     springlength="0" width="0.002" stiffness="0"
+                     damping="0" rgba="1 0.99 0.99 1"/>
+        </default>
+
+        <default class="tendon_B">
+            <tendon range="0.05 1"  limited="true"
+                     springlength="0" width="0.002" stiffness="0"
+                     damping="0" rgba="1 0.99 0.99 1"/>
+        </default>
+
+        <default class="tendon_C">
+            <tendon range="0.05 1"  limited="true"
+                     springlength="0" width="0.002" stiffness="0"
+                     damping="0" rgba="1 0.99 0.99 1"/>
+        </default>
+
+        <default class="tendon_D">
+            <tendon range="0.05 1"  limited="true"
+                     springlength="0" width="0.002" stiffness="0"
+                     damping="0" rgba="1 0.99 0.99 1"/>
+        </default>
+
+        <default class="tendon_E">
+            <tendon range="0.05 1"  limited="true"
+                     springlength="0" width="0.002" stiffness="0"
+                     damping="0" rgba="1 0.99 0.99 1"/>
+        </default>
+
+        <default class="tendon_F">
+            <tendon range="0.05 1"  limited="true"
+                     springlength="0" width="0.002" stiffness="0"
+                     damping="0" rgba="1 0.99 0.99 1"/>
+        </default>
+
+        <default class="tendon_G">
+            <tendon range="0.05 1"  limited="true"
+                     springlength="0" width="0.002" stiffness="0"
+                     damping="0" rgba="1 0.99 0.99 1"/>
+        </default>
+
+        <default class="tendon_H">
+            <tendon range="0.05 1"  limited="true"
+                     springlength="0" width="0.002" stiffness="0"
+                     damping="0" rgba="1 0.99 0.99 1"/>
+        </default>
+
+        <!-- triceps tendon -->
+        <default class="tendon_I">
+            <tendon range="0.05 1"  limited="true"
+                     springlength="0" width="0.002" stiffness="0"
+                     damping="0" rgba="1 0.99 0.99 1"/>
+        </default>
+
+        <default class="tendon_J">
+            <tendon range="0.05 1"  limited="true"
+                     springlength="0" width="0.002" stiffness="0"
+                     damping="0" rgba="1 0.99 0.99 1"/>
+        </default>
+
+        <default class="tendon_K">
+            <tendon range="0.05 1"  limited="true"
+                     springlength="0" width="0.002" stiffness="0"
+                     damping="0" rgba="1 0.99 0.99 1"/>
+        </default>
+
+        <default class="tendon_L">
+            <tendon range="0.05 1"  limited="true"
+                     springlength="0" width="0.002" stiffness="0"
+                     damping="0" rgba="1 0.99 0.99 1"/>
+        </default>
+
+        <default class="tendon_M">
+            <tendon range="0.05 1"  limited="true"
+                     springlength="0" width="0.002" stiffness="0"
+                     damping="0" rgba="1 0.99 0.99 1"/>
+        </default>
+
+        <!-- up-low-connecting tendon -->
+        <default class="tendon_N">
+            <tendon range="0.05 1"  limited="true"
+                     springlength="0" width="0.002" stiffness="0"
+                     damping="0" rgba="1 0.99 0.99 1"/>
+        </default>
+
+        <default class="tendon_O">
+            <tendon range="0.03 1"  limited="true"
+                     springlength="0" width="0.002" stiffness="0"
+                     damping="0" rgba="1 0.99 0.99 1"/>
+        </default>
+
+        <muscle force="0" timeconst="0.1 0.1" scale="1"/>
+    </default>
+
+    <asset>
+        <texture type="skybox" builtin="gradient" rgb1="1 1 1" rgb2="0.6 0.8 1" width="256" height="256"/>
+    </asset>
+
+    <worldbody>
+        <!-- 将相邻 fixed_point* 用细胶囊连起来，形成镂空“环”
+                 半径：100 mm；倾斜角：30度
+             -->
+        <body name="anchor_ring" pos="0 0 0">
+            <geom name="ring_seg_01" type="capsule" fromto=" 0  -0.1    0                         0.0180057	-0.0978148	0.0103956" size="0.004" rgba="0.2 0.2 0.2 1" contype="1" conaffinity="1"/>
+            <geom name="ring_seg_02" type="capsule" fromto=" 0.0180057	-0.0978148	0.0103956     0.0352244	-0.0913545	0.0203368" size="0.004" rgba="0.2 0.2 0.2 1" contype="1" conaffinity="1"/>
+            <geom name="ring_seg_03" type="capsule" fromto=" 0.0352244	-0.0913545	0.0203368     0.0509037 -0.0809017	0.0293893" size="0.004" rgba="0.2 0.2 0.2 1" contype="1" conaffinity="1"/>
+            <geom name="ring_seg_04" type="capsule" fromto=" 0.0509037	-0.0809017	0.0293893     0.0643582	-0.0669131	0.0371572" size="0.004" rgba="0.2 0.2 0.2 1" contype="1" conaffinity="1"/>
+            <geom name="ring_seg_05" type="capsule" fromto=" 0.0643582	-0.0669131	0.0371572     0.075 -0.05   0.0433013" size="0.004" rgba="0.2 0.2 0.2 1" contype="1" conaffinity="1"/>
+            <geom name="ring_seg_06" type="capsule" fromto=" 0.075  -0.05   0.0433013             0.0823639	-0.0309017	0.0475528" size="0.004" rgba="0.2 0.2 0.2 1" contype="1" conaffinity="1"/>
+            <geom name="ring_seg_07" type="capsule" fromto=" 0.0823639	-0.0309017	0.0475528     0.0861281	-0.0104528	0.0497261" size="0.004" rgba="0.2 0.2 0.2 1" contype="1" conaffinity="1"/>
+            <geom name="ring_seg_08" type="capsule" fromto=" 0.0861281	-0.0104528	0.0497261     0.0861281	0.0104528	0.0497261" size="0.004" rgba="0.2 0.2 0.2 1" contype="1" conaffinity="1"/>
+            <geom name="ring_seg_09" type="capsule" fromto=" 0.0861281	0.0104528	0.0497261     0.0823639	0.0309017	0.0475528" size="0.004" rgba="0.2 0.2 0.2 1" contype="1" conaffinity="1"/>
+            <geom name="ring_seg_10" type="capsule" fromto=" 0.0823639	0.0309017	0.0475528     0.075 0.05	0.0433013" size="0.004" rgba="0.2 0.2 0.2 1" contype="1" conaffinity="1"/>
+            <geom name="ring_seg_11" type="capsule" fromto=" 0.075	0.05	0.0433013             0.0643582	0.0669131	0.0371572" size="0.004" rgba="0.2 0.2 0.2 1" contype="1" conaffinity="1"/>
+            <geom name="ring_seg_12" type="capsule" fromto=" 0.0643582	0.0669131	0.0371572     0.0509037	0.0809017	0.0293893" size="0.004" rgba="0.2 0.2 0.2 1" contype="1" conaffinity="1"/>
+            <geom name="ring_seg_13" type="capsule" fromto=" 0.0509037	0.0809017	0.0293893     0.0352244	0.0913545	0.0203368" size="0.004" rgba="0.2 0.2 0.2 1" contype="1" conaffinity="1"/>
+            <geom name="ring_seg_14" type="capsule" fromto=" 0.0352244	0.0913545	0.0203368     0.0180057	0.0978148	0.0103956" size="0.004" rgba="0.2 0.2 0.2 1" contype="1" conaffinity="1"/>
+            <geom name="ring_seg_15" type="capsule" fromto=" 0.0180057	0.0978148	0.0103956     0	0.1	0" size="0.004" rgba="0.2 0.2 0.2 1" contype="1" conaffinity="1"/>
+            <geom name="ring_seg_16" type="capsule" fromto=" 0	0.1	0                            -0.0579484	0.0743145	-0.0334565" size="0.004" rgba="0.2 0.2 0.2 1" contype="1" conaffinity="1"/>
+
+            <geom name="ring_seg_17" type="capsule" fromto="-0.0579484	0.0743145	-0.0334565   -0.0700629	0.0587785	-0.0404508" size="0.004" rgba="0.2 0.2 0.2 1" contype="1" conaffinity="1"/>
+            <geom name="ring_seg_18" type="capsule" fromto="-0.0700629	0.0587785	-0.0404508   -0.0791154	0.0406737	-0.0456773" size="0.004" rgba="0.2 0.2 0.2 1" contype="1" conaffinity="1"/>
+            <geom name="ring_seg_19" type="capsule" fromto="-0.0791154	0.0406737	-0.0456773   -0.0847101	0.0207912	-0.0489074" size="0.004" rgba="0.2 0.2 0.2 1" contype="1" conaffinity="1"/>
+            <geom name="ring_seg_20" type="capsule" fromto="-0.0847101	0.0207912	-0.0489074   -0.08660254	0	-0.05" size="0.004" rgba="0.2 0.2 0.2 1" contype="1" conaffinity="1"/>
+            <geom name="ring_seg_21" type="capsule" fromto="-0.08660254	0	-0.05                -0.0847101	-0.0207912	-0.0489074" size="0.004" rgba="0.2 0.2 0.2 1" contype="1" conaffinity="1"/>
+            <geom name="ring_seg_22" type="capsule" fromto="-0.0847101	-0.0207912	-0.0489074   -0.0791154	-0.0406737	-0.0456773" size="0.004" rgba="0.2 0.2 0.2 1" contype="1" conaffinity="1"/>
+            <geom name="ring_seg_23" type="capsule" fromto="-0.0791154	-0.0406737	-0.0456773   -0.0700629	-0.0587785	-0.0404508" size="0.004" rgba="0.2 0.2 0.2 1" contype="1" conaffinity="1"/>
+            <geom name="ring_seg_24" type="capsule" fromto="-0.0700629	-0.0587785	-0.0404508   -0.0579484	-0.0743145	-0.0334565" size="0.004" rgba="0.2 0.2 0.2 1" contype="1" conaffinity="1"/>
+            <geom name="ring_seg_25" type="capsule" fromto="-0.0579484	-0.0743145	-0.0334565    0	-0.1	0" size="0.004" rgba="0.2 0.2 0.2 1" contype="1" conaffinity="1"/>
+        </body>
+
+        <!-- 固定基座，无关节 => 焊接到世界，不随 rod 运动 -->
+        <body name="anchor_base" pos="0 0 0">
+            <site name="fixed_point1"  pos="0	-0.1	0"/>
+            <body name="connect_1" pos="0	-0.1	0">
+                <joint name="joint1" type="ball" range="0 80" damping="0.1" limited="true"/>
+                <geom fromto="0 0   0  0    0	-0.02" size="0.002" type="capsule" density="1200"/>
+                <site name="connecting_point1" pos="0 0 -0.02"/>
+            </body>
+            <site name="fixed_point2"  pos="0.0180057	-0.0978148	0.0103956"/>
+            <body name="connect_2" pos="0.0180057	-0.0978148	0.0103956">
+                <joint name="joint2" type="ball" range="0 80" damping="0.1" limited="true"/>
+                <geom fromto="0 0   0  0    0	-0.02" size="0.002" type="capsule" density="1200"/>
+                <site name="connecting_point2" pos="0 0 -0.02"/>
+            </body>
+
+            <site name="fixed_point3"  pos="0.0352244	-0.0913545	0.0203368"/>
+            <body name="connect_3" pos="0.0352244	-0.0913545	0.0203368">
+                <joint name="joint3" type="ball" range="0 80" damping="0.1" limited="true"/>
+                <geom fromto="0 0   0  0    0	-0.02" size="0.002" type="capsule" density="1200"/>
+                <site name="connecting_point3" pos="0 0 -0.02"/>
+            </body>
+
+            <site name="fixed_point4"  pos="0.0509037	-0.0809017	0.0293893"/>
+            <body name="connect_4" pos="0.0509037	-0.0809017	0.0293893">
+                <joint name="joint4" type="ball" range="0 80" damping="0.1" limited="true"/>
+                <geom fromto="0 0   0  0    0	-0.02" size="0.002" type="capsule" density="1200"/>
+                <site name="connecting_point4" pos="0 0 -0.02"/>
+            </body>
+
+            <site name="fixed_point5"  pos="0.0643582	-0.0669131	0.0371572"/>
+            <body name="connect_5" pos="0.0643582	-0.0669131	0.0371572">
+                <joint name="joint5" type="ball" range="0 80" damping="0.1" limited="true"/>
+                <geom fromto="0 0   0  0    0	-0.02" size="0.002" type="capsule" density="1200"/>
+                <site name="connecting_point5" pos="0 0 -0.02"/>
+            </body>
+
+            <site name="fixed_point6"  pos="0.075	-0.05	0.0433013"/>
+            <body name="connect_6" pos="0.075	-0.05	0.0433013">
+                <joint name="joint6" type="ball" range="0 80" damping="0.1" limited="true"/>
+                <geom fromto="0 0   0  0    0	-0.02" size="0.002" type="capsule" density="1200"/>
+                <site name="connecting_point6" pos="0 0 -0.02"/>
+            </body>
+
+            <site name="fixed_point7"  pos="0.0823639	-0.0309017	0.0475528"/>
+            <body name="connect_7" pos="0.0823639	-0.0309017	0.0475528">
+                <joint name="joint7" type="ball" range="0 80" damping="0.1" limited="true"/>
+                <geom fromto="0 0   0  0    0	-0.02" size="0.002" type="capsule" density="1200"/>
+                <site name="connecting_point7" pos="0 0 -0.02"/>
+            </body>
+
+            <site name="fixed_point8"  pos="0.0861281	-0.0104528	0.0497261"/>
+            <body name="connect_8" pos="0.0861281	-0.0104528	0.0497261">
+                <joint name="joint8" type="ball" range="0 80" damping="0.1" limited="true"/>
+                <geom fromto="0 0   0  0    0	-0.02" size="0.002" type="capsule" density="1200"/>
+                <site name="connecting_point8" pos="0 0 -0.02"/>
+            </body>
+
+            <site name="fixed_point9"  pos="0.0861281	0.0104528	0.0497261"/>
+            <body name="connect_9" pos="0.0861281	0.0104528	0.0497261">
+                <joint name="joint9" type="ball" range="0 80" damping="0.1" limited="true"/>
+                <geom fromto="0 0   0  0    0	-0.02" size="0.002" type="capsule" density="1200"/>
+                <site name="connecting_point9" pos="0 0 -0.02"/>
+            </body>
+
+            <site name="fixed_point10" pos="0.0823639	0.0309017	0.0475528"/>
+            <body name="connect_10" pos="0.0823639	0.0309017	0.0475528">
+                <joint name="joint10" type="ball" range="0 80" damping="0.1" limited="true"/>
+                <geom fromto="0 0   0  0    0	-0.02" size="0.002" type="capsule" density="1200"/>
+                <site name="connecting_point10" pos="0 0 -0.02"/>
+            </body>
+
+            <site name="fixed_point11" pos="0.075	0.05	0.0433013"/>
+            <body name="connect_11" pos="0.075	0.05	0.0433013">
+                <joint name="joint11" type="ball" range="0 80" damping="0.1" limited="true"/>
+                <geom fromto="0 0   0  0    0	-0.02" size="0.002" type="capsule" density="1200"/>
+                <site name="connecting_point11" pos="0 0 -0.02"/>
+            </body>
+
+            <site name="fixed_point12" pos="0.0643582	0.0669131	0.0371572"/>
+            <body name="connect_12" pos="0.0643582	0.0669131	0.0371572">
+                <joint name="joint12" type="ball" range="0 80" damping="0.1" limited="true"/>
+                <geom fromto="0 0   0  0    0	-0.02" size="0.002" type="capsule" density="1200"/>
+                <site name="connecting_point12" pos="0 0 -0.02"/>
+            </body>
+
+            <site name="fixed_point13" pos="0.0509037	0.0809017	0.0293893"/>
+            <body name="connect_13" pos="0.0509037	0.0809017	0.0293893">
+                <joint name="joint13" type="ball" range="0 80" damping="0.1" limited="true"/>
+                <geom fromto="0 0   0  0    0	-0.02" size="0.002" type="capsule" density="1200"/>
+                <site name="connecting_point13" pos="0 0 -0.02"/>
+            </body>
+
+            <site name="fixed_point14" pos="0.0352244	0.0913545	0.0203368"/>
+            <body name="connect_14" pos="0.0352244	0.0913545	0.0203368">
+                <joint name="joint14" type="ball" range="0 80" damping="0.1" limited="true"/>
+                <geom fromto="0 0   0  0    0	-0.02" size="0.002" type="capsule" density="1200"/>
+                <site name="connecting_point14" pos="0 0 -0.02"/>
+            </body>
+
+            <site name="fixed_point15" pos="0.0180057	0.0978148	0.0103956"/>
+            <body name="connect_15" pos="0.0180057	0.0978148	0.0103956">
+                <joint name="joint15" type="ball" range="0 80" damping="0.1" limited="true"/>
+                <geom fromto="0 0   0  0    0	-0.02" size="0.002" type="capsule" density="1200"/>
+                <site name="connecting_point15" pos="0 0 -0.02"/>
+            </body>
+
+            <site name="fixed_point16" pos="0	0.1	0"/>
+            <body name="connect_16" pos="0	0.1	0">
+                <joint name="joint16" type="ball" range="0 80" damping="0.1" limited="true"/>
+                <geom fromto="0 0   0  0    0	-0.02" size="0.002" type="capsule" density="1200"/>
+                <site name="connecting_point16" pos="0 0 -0.02"/>
+            </body>
+
+            <site name="fixed_point17" pos="-0.0579484	0.0743145	-0.0334565"/>
+            <body name="connect_17" pos="-0.0579484	0.0743145	-0.0334565">
+                <joint name="joint17" type="ball" range="0 80" damping="0.1" limited="true"/>
+                <geom fromto="0 0   0  0    0	-0.02" size="0.002" type="capsule" density="1200"/>
+                <site name="connecting_point17" pos="0 0 -0.02"/>
+            </body>
+
+            <site name="fixed_point18" pos="-0.0700629	0.0587785	-0.0404508"/>
+            <body name="connect_18" pos="-0.0700629	0.0587785	-0.0404508">
+                <joint name="joint18" type="ball" range="0 80" damping="0.1" limited="true"/>
+                <geom fromto="0 0   0  0    0	-0.02" size="0.002" type="capsule" density="1200"/>
+                <site name="connecting_point18" pos="0 0 -0.02"/>
+            </body>
+
+            <site name="fixed_point19" pos="-0.0791154	0.0406737	-0.0456773"/>
+            <body name="connect_19" pos="-0.0791154	0.0406737	-0.0456773">
+                <joint name="joint19" type="ball" range="0 80" damping="0.1" limited="true"/>
+                <geom fromto="0 0   0  0    0	-0.02" size="0.002" type="capsule" density="1200"/>
+                <site name="connecting_point19" pos="0 0 -0.02"/>
+            </body>
+
+            <site name="fixed_point20" pos="-0.0847101	0.0207912	-0.0489074"/>
+            <body name="connect_20" pos="-0.0847101	0.0207912	-0.0489074">
+                <joint name="joint20" type="ball" range="0 80" damping="0.1" limited="true"/>
+                <geom fromto="0 0   0  0    0	-0.02" size="0.002" type="capsule" density="1200"/>
+                <site name="connecting_point20" pos="0 0 -0.02"/>
+            </body>
+
+            <site name="fixed_point21" pos="-0.08660254	0	-0.05"/>
+            <body name="connect_21" pos="-0.08660254	0	-0.05">
+                <joint name="joint21" type="ball" range="0 80" damping="0.1" limited="true"/>
+                <geom fromto="0 0   0  0    0	-0.02" size="0.002" type="capsule" density="1200"/>
+                <site name="connecting_point21" pos="0 0 -0.02"/>
+            </body>
+
+            <site name="fixed_point22" pos="-0.0847101	-0.0207912	-0.0489074"/>
+            <body name="connect_22" pos="-0.0847101	-0.0207912	-0.0489074">
+                <joint name="joint22" type="ball" range="0 80" damping="0.1" limited="true"/>
+                <geom fromto="0 0   0  0    0	-0.02" size="0.002" type="capsule" density="1200"/>
+                <site name="connecting_point22" pos="0 0 -0.02"/>
+            </body>
+
+            <site name="fixed_point23" pos="-0.0791154	-0.0406737	-0.0456773"/>
+            <body name="connect_23" pos="-0.0791154	-0.0406737	-0.0456773">
+                <joint name="joint23" type="ball" range="0 80" damping="0.1" limited="true"/>
+                <geom fromto="0 0   0  0    0	-0.02" size="0.002" type="capsule" density="1200"/>
+                <site name="connecting_point23" pos="0 0 -0.02"/>
+            </body>
+
+            <site name="fixed_point24" pos="-0.0700629	-0.0587785	-0.0404508"/>
+            <body name="connect_24" pos="-0.0700629	-0.0587785	-0.0404508">
+                <joint name="joint24" type="ball" range="0 80" damping="0.1" limited="true"/>
+                <geom fromto="0 0   0  0    0	-0.02" size="0.002" type="capsule" density="1200"/>
+                <site name="connecting_point24" pos="0 0 -0.02"/>
+            </body>
+
+            <site name="fixed_point25" pos="-0.0579484	-0.0743145	-0.0334565"/>
+            <body name="connect_25" pos="-0.0579484	-0.0743145	-0.0334565">
+                <joint name="joint25" type="ball" range="0 80" damping="0.1" limited="true"/>
+                <geom fromto="0 0   0  0    0	-0.02" size="0.002" type="capsule" density="1200"/>
+                <site name="connecting_point25" pos="0 0 -0.02"/>
+            </body>
+
+        </body>
+
+        <!-- 定义直杆 -->
+        <body name="rod" pos="-0.025 0 0">
+            <joint name="rod_joint" type="ball" pos="0 0 -0.04" range="0 80" damping="0.1" limited="true"/>
+            <!-- 杆长：25cm -->
+            <geom fromto="0 0 -0.04  0 0 -0.29" size="0.02" type="capsule"/>
+            <inertial pos="0 0 -0.165" mass="0.10" diaginertia="0.003375 0.003375 0.0005"/>
+
+            <!-- 外伸耳板：上下臂肌肉，上臂anchorpoint -->
+            <geom name="anchor_plate1" type="box" pos="0.00 0.03 -0.195"
+                size="0.01 0.02 0.003" contype="0" conaffinity="0" density="1200" rgba="1 0.99 0.99 1"/>
+            <geom name="anchor_plate2" type="box" pos="0.00 -0.03 -0.195"
+                size="0.01 0.02 0.003" contype="0" conaffinity="0" density="1200" rgba="1 0.99 0.99 1"/>
+
+
+            <!-- 耳板上的连接孔位（用于 tendon/muscle 路径点） -->
+            <site name="up_front1" pos="-0.005 0.035 -0.198" size="0.002" rgba="1 0 0 1"/>
+            <body name="updown_front_connect_1" pos="-0.005 0.035 -0.198">
+                <joint name="updown_front_joint1" type="ball" range="0 80" damping="0.1" limited="true"/>
+                <geom fromto="0 0   0  0    0	-0.02" size="0.002" type="capsule" density="1200"/>
+                <site name="up_front_attach1" pos="0 0 -0.02"/>
+            </body>
+
+            <site name="up_front2" pos=" 0.00  0.035 -0.198" size="0.002" rgba="1 0 0 1"/>
+            <body name="updown_front_connect_2" pos="0.00 0.035 -0.198">
+                <joint name="updown_front_joint2" type="ball" range="0 80" damping="0.1" limited="true"/>
+                <geom fromto="0 0   0  0    0	-0.02" size="0.002" type="capsule" density="1200"/>
+                <site name="up_front_attach2" pos="0 0 -0.02"/>
+            </body>
+
+            <site name="up_front3" pos=" 0.005 0.035 -0.198" size="0.002" rgba="1 0 0 1"/>
+            <body name="updown_front_connect_3" pos="0.005 0.035 -0.198">
+                <joint name="updown_front_joint3" type="ball" range="0 80" damping="0.1" limited="true"/>
+                <geom fromto="0 0   0  0    0	-0.02" size="0.002" type="capsule" density="1200"/>
+                <site name="up_front_attach3" pos="0 0 -0.02"/>
+            </body>
+
+            <site name="up_front4" pos="-0.005 0.04  -0.198" size="0.002" rgba="1 0 0 1"/>
+            <body name="updown_front_connect_4" pos="-0.005 0.04 -0.198">
+                <joint name="updown_front_joint4" type="ball" range="0 80" damping="0.1" limited="true"/>
+                <geom fromto="0 0   0  0    0	-0.02" size="0.002" type="capsule" density="1200"/>
+                <site name="up_front_attach4" pos="0 0 -0.02"/>
+            </body>
+
+            <site name="up_front5" pos=" 0.005 0.04  -0.198" size="0.002" rgba="1 0 0 1"/>
+            <body name="updown_front_connect_5" pos="0.005 0.04 -0.198">
+                <joint name="updown_front_joint5" type="ball" range="0 80" damping="0.1" limited="true"/>
+                <geom fromto="0 0   0  0    0	-0.02" size="0.002" type="capsule" density="1200"/>
+                <site name="up_front_attach5" pos="0 0 -0.02"/>
+            </body>
+
+            <site name="up_front6" pos="-0.005 0.045 -0.198" size="0.002" rgba="1 0 0 1"/>
+            <body name="updown_front_connect_6" pos="-0.005 0.045 -0.198">
+                <joint name="updown_front_joint6" type="ball" range="0 80" damping="0.1" limited="true"/>
+                <geom fromto="0 0   0  0    0	-0.02" size="0.002" type="capsule" density="1200"/>
+                <site name="up_front_attach6" pos="0 0 -0.02"/>
+            </body>
+
+            <site name="up_front7" pos=" 0.00  0.045 -0.198" size="0.002" rgba="1 0 0 1"/>
+            <body name="updown_front_connect_7" pos="0.005 0.045 -0.198">
+                <joint name="updown_front_joint7" type="ball" range="0 80" damping="0.1" limited="true"/>
+                <geom fromto="0 0   0  0    0	-0.02" size="0.002" type="capsule" density="1200"/>
+                <site name="up_front_attach7" pos="0 0 -0.02"/>
+            </body>
+
+            <site name="up_front8" pos=" 0.005 0.045 -0.198" size="0.002" rgba="1 0 0 1"/>
+            <body name="updown_front_connect_8" pos="0.005 0.045 -0.198">
+                <joint name="updown_front_joint8" type="ball" range="0 80" damping="0.1" limited="true"/>
+                <geom fromto="0 0   0  0    0	-0.02" size="0.002" type="capsule" density="1200"/>
+                <site name="up_front_attach8" pos="0 0 -0.02"/>
+            </body>
+
+
+            <site name="up_behind1" pos="-0.005 -0.035 -0.198" size="0.002" rgba="1 0 0 1"/>
+            <body name="updown_behind_connect_1" pos="-0.005 -0.035 -0.198">
+                <joint name="updown_behind_joint1" type="ball" range="0 80" damping="0.1" limited="true"/>
+                <geom fromto="0 0   0  0    0	-0.02" size="0.002" type="capsule" density="1200"/>
+                <site name="up_behind_attach1" pos="0 0 -0.02"/>
+            </body>
+
+            <site name="up_behind2" pos=" 0.00  -0.035 -0.198" size="0.002" rgba="1 0 0 1"/>
+            <body name="updown_behind_connect_2" pos="0.00 -0.035 -0.198">
+                <joint name="updown_behind_joint2" type="ball" range="0 80" damping="0.1" limited="true"/>
+                <geom fromto="0 0   0  0    0	-0.02" size="0.002" type="capsule" density="1200"/>
+                <site name="up_behind_attach2" pos="0 0 -0.02"/>
+            </body>
+
+            <site name="up_behind3" pos=" 0.005 -0.035 -0.198" size="0.002" rgba="1 0 0 1"/>
+            <body name="updown_behind_connect_3" pos="0.005 -0.035 -0.198">
+                <joint name="updown_behind_joint3" type="ball" range="0 80" damping="0.1" limited="true"/>
+                <geom fromto="0 0   0  0    0	-0.02" size="0.002" type="capsule" density="1200"/>
+                <site name="up_behind_attach3" pos="0 0 -0.02"/>
+            </body>
+
+            <site name="up_behind4" pos="-0.005 -0.04  -0.198" size="0.002" rgba="1 0 0 1"/>
+            <body name="updown_behind_connect_4" pos="-0.005 -0.04 -0.198">
+                <joint name="updown_behind_joint4" type="ball" range="0 80" damping="0.1" limited="true"/>
+                <geom fromto="0 0   0  0    0	-0.02" size="0.002" type="capsule" density="1200"/>
+                <site name="up_behind_attach4" pos="0 0 -0.02"/>
+            </body>
+
+            <site name="up_behind5" pos=" 0.005 -0.04  -0.198" size="0.002" rgba="1 0 0 1"/>
+            <body name="updown_behind_connect_5" pos="-0.005 -0.04 -0.198">
+                <joint name="updown_behind_joint5" type="ball" range="0 80" damping="0.1" limited="true"/>
+                <geom fromto="0 0   0  0    0	-0.02" size="0.002" type="capsule" density="1200"/>
+                <site name="up_behind_attach5" pos="0 0 -0.02"/>
+            </body>
+
+            <site name="up_behind6" pos="-0.005 -0.045 -0.198" size="0.002" rgba="1 0 0 1"/>
+            <body name="updown_behind_connect_6" pos="-0.005 -0.045 -0.198">
+                <joint name="updown_behind_joint6" type="ball" range="0 80" damping="0.1" limited="true"/>
+                <geom fromto="0 0   0  0    0	-0.02" size="0.002" type="capsule" density="1200"/>
+                <site name="up_behind_attach6" pos="0 0 -0.02"/>
+            </body>
+
+            <site name="up_behind7" pos=" 0.00  -0.045 -0.198" size="0.002" rgba="1 0 0 1"/>
+            <body name="updown_behind_connect_7" pos="0.00 -0.045 -0.198">
+                <joint name="updown_behind_joint7" type="ball" range="0 80" damping="0.1" limited="true"/>
+                <geom fromto="0 0   0  0    0	-0.02" size="0.002" type="capsule" density="1200"/>
+                <site name="up_behind_attach7" pos="0 0 -0.02"/>
+            </body>
+
+            <site name="up_behind8" pos=" 0.005 -0.045 -0.198" size="0.002" rgba="1 0 0 1"/>
+            <body name="updown_behind_connect_8" pos="0.005 -0.045 -0.198">
+                <joint name="updown_behind_joint8" type="ball" range="0 80" damping="0.1" limited="true"/>
+                <geom fromto="0 0   0  0    0	-0.02" size="0.002" type="capsule" density="1200"/>
+                <site name="up_behind_attach8" pos="0 0 -0.02"/>
+            </body>
+
+            <!-- 定义直杆上所有连接肌肉的位点 -->
+            <site name="upperarm_connecting_point1" pos="0	-0.02 -0.150"/>
+            <site name="upperarm_connecting_point2" pos="0.004158234	-0.019562952 -0.150"/>
+            <site name="upperarm_connecting_point3" pos="0.008134733	-0.018270909 -0.150"/>
+            <site name="upperarm_connecting_point4" pos="0.011755705	-0.01618034 -0.150"/>
+            <site name="upperarm_connecting_point5" pos="0.014862897	-0.013382612 -0.150"/>
+            <site name="upperarm_connecting_point6" pos="0.017320508    -0.01 -0.150"/>
+            <site name="upperarm_connecting_point7" pos="0.01902113     -0.00618034 -0.150"/>
+            <site name="upperarm_connecting_point8" pos="0.019890438    -0.002090569 -0.150"/>
+            <site name="upperarm_connecting_point9" pos="0.019890438	0.002090569 -0.150"/>
+            <site name="upperarm_connecting_point10" pos="0.01902113	0.00618034 -0.150"/>
+            <site name="upperarm_connecting_point11" pos="0.017320508	0.01 -0.150"/>
+            <site name="upperarm_connecting_point12" pos="0.014862897	0.013382612 -0.150"/>
+            <site name="upperarm_connecting_point13" pos="0.011755705	0.01618034 -0.150"/>
+            <site name="upperarm_connecting_point14" pos="0.008134733	0.018270909 -0.150"/>
+            <site name="upperarm_connecting_point15" pos="0.004158234	0.019562952 -0.150"/>
+            <site name="upperarm_connecting_point16" pos="0	0.02 -0.150"/>
+
+            <site name="upperarm_connecting_point17" pos="-0.013382612	0.014862897 -0.22"/>
+            <site name="upperarm_connecting_point18" pos="-0.01618034	0.011755705 -0.22"/>
+            <site name="upperarm_connecting_point19" pos="-0.018270909	0.008134733 -0.22"/>
+            <site name="upperarm_connecting_point20" pos="-0.019562952	0.004158234 -0.22"/>
+            <site name="upperarm_connecting_point21" pos="-0.02	0.00 -0.22"/>
+            <site name="upperarm_connecting_point22" pos="-0.019562952	-0.004158234 -0.22"/>
+            <site name="upperarm_connecting_point23" pos="-0.018270909	-0.008134733 -0.22"/>
+            <site name="upperarm_connecting_point24" pos="-0.01618034	-0.011755705 -0.22"/>
+            <site name="upperarm_connecting_point25" pos="-0.013382612	-0.014862897 -0.22"/>
+
+            <body name="elbow" pos="0 0 -0.29">
+                <!-- 肘关节：绕 y 轴转动（屈伸），角度 0~140 度，可按需要调 -->
+                <joint name="elbow_flex" type="hinge" pos="0 0 0" axis="1 0 0"
+                       range="0 140" limited="true" damping="0.1"/>
+
+                <!-- 肘部关节（用小球表示） -->
+                <geom name="elbow_sphere" type="sphere" size="0.022"
+                      rgba="0.0 0.8 0.6 0.5" contype="1" conaffinity="1" />
+
+                <!-- 下臂本体：从肘部沿 -z 方向延伸一段长度 -->
+                <body name="forearm" pos="0 0 0">
+                    <!-- 下臂几何；L = 0.20 m，可按需调 -->
+                    <geom name="forearm_capsule" type="capsule" size="0.018"
+                          fromto="0 0 0   0 0 -0.20"
+                          rgba="0.2 0.6 0.9 1" contype="1" conaffinity="1"/>
+
+                    <!-- 下臂惯性（简化设置）：质心居中，质量 0.08 kg，可按需调 -->
+                    <inertial pos="0 0 -0.10" mass="0.08" diaginertia="0.00032 0.00032 0.00012"/>
+
+                    <!-- 外伸耳板 -->
+                    <geom name="anchor_plate3" type="box" pos="0.00  0.03 -0.10"
+                          size="0.01 0.02 0.003" contype="0" conaffinity="0" density="1200" rgba="1 0.99 0.99 1"/>
+                    <geom name="anchor_plate4" type="box" pos="0.00 -0.03 -0.04"
+                          size="0.01 0.025 0.003" contype="1" conaffinity="1" density="1200" rgba="1 0.99 0.99 1"/>
+                    <geom name="anchor_plate5" type="box" pos="0.00 -0.045 -0.0185"
+                          size="0.01 0.01 0.0185" contype="1" conaffinity="1" density="1200" rgba="1 0.99 0.99 1"/>
+
+
+                    <!-- 下臂（forearm）中段的侧向锚点，略偏 +x，pos 相对肘部局部坐标 -->
+                    <site name="down_front_attach1"  pos="-0.005 0.035 -0.097" size="0.004" rgba="1 0 0 1"/>
+                    <site name="down_front_attach2"  pos=" 0.00  0.035 -0.097" size="0.004" rgba="1 0 0 1"/>
+                    <site name="down_front_attach3"  pos=" 0.005 0.035 -0.097" size="0.004" rgba="1 0 0 1"/>
+                    <site name="down_front_attach4"  pos="-0.005 0.040 -0.097" size="0.004" rgba="1 0 0 1"/>
+
+                    <site name="down_front_attach5"  pos=" 0.005 0.040 -0.097" size="0.004" rgba="1 0 0 1"/>
+                    <site name="down_front_attach6"  pos="-0.005 0.045 -0.097" size="0.004" rgba="1 0 0 1"/>
+                    <site name="down_front_attach7"  pos=" 0.00  0.045 -0.097" size="0.004" rgba="1 0 0 1"/>
+                    <site name="down_front_attach8"  pos=" 0.005 0.045 -0.097" size="0.004" rgba="1 0 0 1"/>
+
+                    <site name="down_behind_attach1" pos="-0.005 -0.040 0" size="0.004" rgba="1 0 0 1"/>
+                    <site name="down_behind_attach2" pos=" 0.00  -0.040 0" size="0.004" rgba="1 0 0 1"/>
+                    <site name="down_behind_attach3" pos=" 0.005 -0.040 0" size="0.004" rgba="1 0 0 1"/>
+                    <site name="down_behind_attach4" pos="-0.005 -0.045 0" size="0.004" rgba="1 0 0 1"/>
+
+                    <site name="down_behind_attach5" pos=" 0.005 -0.045 0" size="0.004" rgba="1 0 0 1"/>
+                    <site name="down_behind_attach6" pos="-0.005 -0.050 0" size="0.004" rgba="1 0 0 1"/>
+                    <site name="down_behind_attach7" pos=" 0.00  -0.050 0" size="0.004" rgba="1 0 0 1"/>
+                    <site name="down_behind_attach8" pos=" 0.005 -0.050 0" size="0.004" rgba="1 0 0 1"/>
+
+                    <!-- 下臂末端的参考 site（可用于末端定位/传感） -->
+                    <body name="forearm_tip" pos="0 0 -0.20">
+                        <geom contype="0" rgba="0.2 1 0.2 1" size=".018" type="sphere"/>
+                    </body>
+
+                </body>
+            </body>
+
+
+        </body>
+    </worldbody>
+
+    <tendon>
+        <spatial name="tendon1" class="tendon_A"><site site="connecting_point1"/><site site="upperarm_connecting_point1"/></spatial>
+        <spatial name="tendon2" class="tendon_B"><site site="connecting_point2"/><site site="upperarm_connecting_point2"/></spatial>
+        <spatial name="tendon3" class="tendon_C"><site site="connecting_point3"/><site site="upperarm_connecting_point3"/></spatial>
+        <spatial name="tendon4" class="tendon_D"><site site="connecting_point4"/><site site="upperarm_connecting_point4"/></spatial>
+        <spatial name="tendon5" class="tendon_E"><site site="connecting_point5"/><site site="upperarm_connecting_point5"/></spatial>
+        <spatial name="tendon6" class="tendon_F"><site site="connecting_point6"/><site site="upperarm_connecting_point6"/></spatial>
+        <spatial name="tendon7" class="tendon_G"><site site="connecting_point7"/><site site="upperarm_connecting_point7"/></spatial>
+        <spatial name="tendon8" class="tendon_H"><site site="connecting_point8"/><site site="upperarm_connecting_point8"/></spatial>
+        <spatial name="tendon9" class="tendon_H"><site site="connecting_point9"/><site site="upperarm_connecting_point9"/></spatial>
+        <spatial name="tendon10" class="tendon_G"><site site="connecting_point10"/><site site="upperarm_connecting_point10"/></spatial>
+        <spatial name="tendon11" class="tendon_F"><site site="connecting_point11"/><site site="upperarm_connecting_point11"/></spatial>
+        <spatial name="tendon12" class="tendon_E"><site site="connecting_point12"/><site site="upperarm_connecting_point12"/></spatial>
+        <spatial name="tendon13" class="tendon_D"><site site="connecting_point13"/><site site="upperarm_connecting_point13"/></spatial>
+        <spatial name="tendon14" class="tendon_C"><site site="connecting_point14"/><site site="upperarm_connecting_point14"/></spatial>
+        <spatial name="tendon15" class="tendon_B"><site site="connecting_point15"/><site site="upperarm_connecting_point15"/></spatial>
+        <spatial name="tendon16" class="tendon_A"><site site="connecting_point16"/><site site="upperarm_connecting_point16"/></spatial>
+
+        <spatial name="tendon17" class="tendon_I"><site site="connecting_point17"/><site site="upperarm_connecting_point17"/></spatial>
+        <spatial name="tendon18" class="tendon_J"><site site="connecting_point18"/><site site="upperarm_connecting_point18"/></spatial>
+        <spatial name="tendon19" class="tendon_K"><site site="connecting_point19"/><site site="upperarm_connecting_point19"/></spatial>
+        <spatial name="tendon20" class="tendon_L"><site site="connecting_point20"/><site site="upperarm_connecting_point20"/></spatial>
+        <spatial name="tendon21" class="tendon_M"><site site="connecting_point21"/><site site="upperarm_connecting_point21"/></spatial>
+        <spatial name="tendon22" class="tendon_L"><site site="connecting_point22"/><site site="upperarm_connecting_point22"/></spatial>
+        <spatial name="tendon23" class="tendon_K"><site site="connecting_point23"/><site site="upperarm_connecting_point23"/></spatial>
+        <spatial name="tendon24" class="tendon_J"><site site="connecting_point24"/><site site="upperarm_connecting_point24"/></spatial>
+        <spatial name="tendon25" class="tendon_I"><site site="connecting_point25"/><site site="upperarm_connecting_point25"/></spatial>
+    </tendon>
+
+    <tendon>
+        <spatial name="elbow_front_tendon1" class="tendon_N"><site site="up_front_attach1"/><site site="down_front_attach1"/></spatial>
+        <spatial name="elbow_front_tendon2" class="tendon_N"><site site="up_front_attach2"/><site site="down_front_attach2"/></spatial>
+        <spatial name="elbow_front_tendon3" class="tendon_N"><site site="up_front_attach3"/><site site="down_front_attach3"/></spatial>
+        <spatial name="elbow_front_tendon4" class="tendon_N"><site site="up_front_attach4"/><site site="down_front_attach4"/></spatial>
+        <spatial name="elbow_front_tendon5" class="tendon_N"><site site="up_front_attach5"/><site site="down_front_attach5"/></spatial>
+        <spatial name="elbow_front_tendon6" class="tendon_N"><site site="up_front_attach6"/><site site="down_front_attach6"/></spatial>
+        <spatial name="elbow_front_tendon7" class="tendon_N"><site site="up_front_attach7"/><site site="down_front_attach7"/></spatial>
+        <spatial name="elbow_front_tendon8" class="tendon_N"><site site="up_front_attach8"/><site site="down_front_attach8"/></spatial>
+
+        <spatial name="elbow_behind_tendon1" class="tendon_O"><site site="up_behind_attach1"/><site site="down_behind_attach1"/></spatial>
+        <spatial name="elbow_behind_tendon2" class="tendon_O"><site site="up_behind_attach2"/><site site="down_behind_attach2"/></spatial>
+        <spatial name="elbow_behind_tendon3" class="tendon_O"><site site="up_behind_attach3"/><site site="down_behind_attach3"/></spatial>
+        <spatial name="elbow_behind_tendon4" class="tendon_O"><site site="up_behind_attach4"/><site site="down_behind_attach4"/></spatial>
+        <spatial name="elbow_behind_tendon5" class="tendon_O"><site site="up_behind_attach5"/><site site="down_behind_attach5"/></spatial>
+        <spatial name="elbow_behind_tendon6" class="tendon_O"><site site="up_behind_attach6"/><site site="down_behind_attach6"/></spatial>
+        <spatial name="elbow_behind_tendon7" class="tendon_O"><site site="up_behind_attach7"/><site site="down_behind_attach7"/></spatial>
+        <spatial name="elbow_behind_tendon8" class="tendon_O"><site site="up_behind_attach8"/><site site="down_behind_attach8"/></spatial>
+
+    </tendon>
+
+
+    <actuator>
+        <muscle name="muscle1" tendon="tendon1" lengthrange="0.05 0.35" ctrllimited="true" ctrlrange="0 1"/>
+        <muscle name="muscle2" tendon="tendon2" lengthrange="0.05 0.35" ctrllimited="true" ctrlrange="0 1"/>
+        <muscle name="muscle3" tendon="tendon3" lengthrange="0.05 0.35" ctrllimited="true" ctrlrange="0 1"/>
+        <muscle name="muscle4" tendon="tendon4" lengthrange="0.05 0.35" ctrllimited="true" ctrlrange="0 1"/>
+        <muscle name="muscle5" tendon="tendon5" lengthrange="0.05 0.35" ctrllimited="true" ctrlrange="0 1"/>
+        <muscle name="muscle6" tendon="tendon6" lengthrange="0.05 0.35" ctrllimited="true" ctrlrange="0 1"/>
+        <muscle name="muscle7" tendon="tendon7" lengthrange="0.05 0.35" ctrllimited="true" ctrlrange="0 1"/>
+        <muscle name="muscle8" tendon="tendon8" lengthrange="0.05 0.35" ctrllimited="true" ctrlrange="0 1"/>
+        <muscle name="muscle9" tendon="tendon9" lengthrange="0.05 0.35" ctrllimited="true" ctrlrange="0 1"/>
+        <muscle name="muscle10" tendon="tendon10" lengthrange="0.05 0.35" ctrllimited="true" ctrlrange="0 1"/>
+        <muscle name="muscle11" tendon="tendon11" lengthrange="0.05 0.35" ctrllimited="true" ctrlrange="0 1"/>
+        <muscle name="muscle12" tendon="tendon12" lengthrange="0.05 0.35" ctrllimited="true" ctrlrange="0 1"/>
+        <muscle name="muscle13" tendon="tendon13" lengthrange="0.05 0.35" ctrllimited="true" ctrlrange="0 1"/>
+        <muscle name="muscle14" tendon="tendon14" lengthrange="0.05 0.35" ctrllimited="true" ctrlrange="0 1"/>
+        <muscle name="muscle15" tendon="tendon15" lengthrange="0.05 0.35" ctrllimited="true" ctrlrange="0 1"/>
+        <muscle name="muscle16" tendon="tendon16" lengthrange="0.05 0.35" ctrllimited="true" ctrlrange="0 1"/>
+
+        <muscle name="muscle17" tendon="tendon17" lengthrange="0.05 0.35" ctrllimited="true" ctrlrange="0 1"/>
+        <muscle name="muscle18" tendon="tendon18" lengthrange="0.05 0.35" ctrllimited="true" ctrlrange="0 1"/>
+        <muscle name="muscle19" tendon="tendon19" lengthrange="0.05 0.35" ctrllimited="true" ctrlrange="0 1"/>
+        <muscle name="muscle20" tendon="tendon20" lengthrange="0.05 0.35" ctrllimited="true" ctrlrange="0 1"/>
+        <muscle name="muscle21" tendon="tendon21" lengthrange="0.05 0.35" ctrllimited="true" ctrlrange="0 1"/>
+        <muscle name="muscle22" tendon="tendon22" lengthrange="0.05 0.35" ctrllimited="true" ctrlrange="0 1"/>
+        <muscle name="muscle23" tendon="tendon23" lengthrange="0.05 0.35" ctrllimited="true" ctrlrange="0 1"/>
+        <muscle name="muscle24" tendon="tendon24" lengthrange="0.05 0.35" ctrllimited="true" ctrlrange="0 1"/>
+        <muscle name="muscle25" tendon="tendon25" lengthrange="0.05 0.35" ctrllimited="true" ctrlrange="0 1"/>
+
+        <muscle name="elbow_front_flexor1" tendon="elbow_front_tendon1" lengthrange="0.05 0.35" ctrllimited="true" ctrlrange="0 1"/>
+        <muscle name="elbow_front_flexor2" tendon="elbow_front_tendon2" lengthrange="0.05 0.35" ctrllimited="true" ctrlrange="0 1"/>
+        <muscle name="elbow_front_flexor3" tendon="elbow_front_tendon3" lengthrange="0.05 0.35" ctrllimited="true" ctrlrange="0 1"/>
+        <muscle name="elbow_front_flexor4" tendon="elbow_front_tendon4" lengthrange="0.05 0.35" ctrllimited="true" ctrlrange="0 1"/>
+        <muscle name="elbow_front_flexor5" tendon="elbow_front_tendon5" lengthrange="0.05 0.35" ctrllimited="true" ctrlrange="0 1"/>
+        <muscle name="elbow_front_flexor6" tendon="elbow_front_tendon6" lengthrange="0.05 0.35" ctrllimited="true" ctrlrange="0 1"/>
+        <muscle name="elbow_front_flexor7" tendon="elbow_front_tendon7" lengthrange="0.05 0.35" ctrllimited="true" ctrlrange="0 1"/>
+        <muscle name="elbow_front_flexor8" tendon="elbow_front_tendon8" lengthrange="0.05 0.35" ctrllimited="true" ctrlrange="0 1"/>
+
+        <muscle name="elbow_behind_flexor1" tendon="elbow_behind_tendon1" lengthrange="0.05 0.35" ctrllimited="true" ctrlrange="0 1"/>
+        <muscle name="elbow_behind_flexor2" tendon="elbow_behind_tendon2" lengthrange="0.05 0.35" ctrllimited="true" ctrlrange="0 1"/>
+        <muscle name="elbow_behind_flexor3" tendon="elbow_behind_tendon3" lengthrange="0.05 0.35" ctrllimited="true" ctrlrange="0 1"/>
+        <muscle name="elbow_behind_flexor4" tendon="elbow_behind_tendon4" lengthrange="0.05 0.35" ctrllimited="true" ctrlrange="0 1"/>
+        <muscle name="elbow_behind_flexor5" tendon="elbow_behind_tendon5" lengthrange="0.05 0.35" ctrllimited="true" ctrlrange="0 1"/>
+        <muscle name="elbow_behind_flexor6" tendon="elbow_behind_tendon6" lengthrange="0.05 0.35" ctrllimited="true" ctrlrange="0 1"/>
+        <muscle name="elbow_behind_flexor7" tendon="elbow_behind_tendon7" lengthrange="0.05 0.35" ctrllimited="true" ctrlrange="0 1"/>
+        <muscle name="elbow_behind_flexor8" tendon="elbow_behind_tendon8" lengthrange="0.05 0.35" ctrllimited="true" ctrlrange="0 1"/>
+
+    </actuator>
+</mujoco>
+
+<!--
+圆盘半径 10cm
+大臂 25cm，小臂 20cm
+起始位置0.069m
+大臂 100g，小臂 80g
+-->
