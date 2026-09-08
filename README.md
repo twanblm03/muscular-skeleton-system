@@ -60,7 +60,13 @@ repository and is the best starting point for a new user.
 
 ## Environment Setup
 
-Recommended: Python 3.9 or newer.
+Version: 
+```bash
+Python 3.12
+MuJoCo 3.2.3 
+NumPy 1.24.4
+```
+(DO NOT use higher MuJoCo version.)
 
 ```bash
 python -m venv .venv
